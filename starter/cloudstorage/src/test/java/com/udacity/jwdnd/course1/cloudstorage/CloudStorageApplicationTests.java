@@ -1,9 +1,11 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
+import com.udacity.jwdnd.course1.cloudstorage.WebElements.HomePage;
+import com.udacity.jwdnd.course1.cloudstorage.WebElements.LoginPage;
+import com.udacity.jwdnd.course1.cloudstorage.WebElements.SignupPage;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -14,12 +16,12 @@ import org.springframework.boot.web.server.LocalServerPort;
 
 import java.io.File;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CloudStorageApplicationTests {
+public class CloudStorageApplicationTests {
 
 	@LocalServerPort
-	private int port;
+	protected int port;
 
-	private WebDriver driver;
+	protected WebDriver driver;
 
 	@BeforeAll
 	static void beforeAll() {
@@ -199,7 +201,19 @@ class CloudStorageApplicationTests {
 		Assertions.assertFalse(driver.getPageSource().contains("HTTP Status 403 – Forbidden"));
 
 	}
-
-
-
+	protected HomePage signUpAndLogin() {
+		driver.get("http://localhost:" + this.port + "/signup");
+		SignupPage signupPage = new SignupPage(driver);
+		signupPage.setFirstName("anil");
+		signupPage.setLastName("savaskurt");
+		signupPage.setUserName("asavaskurt");
+		signupPage.setPassword("221099");
+		signupPage.signUp();
+		driver.get("http://localhost:" + this.port + "/login");
+		LoginPage loginPage = new LoginPage(driver);
+		loginPage.setUserName("asavaskurt");
+		loginPage.setPassword("221099");
+		loginPage.login();
+		return new HomePage(driver);
+	}
 }
